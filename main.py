@@ -1,16 +1,14 @@
-from config import HF_API_KEY
-import requests
+from transformers import pipeline
+classifier = pipeline(
+    task="sentiment-analysis",
+    model="distilbert-base-uncased-finetuned-sst-2-english"
+)
+def get_sentiment(text):
+    result = classifier(text)[0]
+    label = result["label"]
+    score = result["score"]
+    print(f"Sentiment: {label}, Confidence{score:.2f}")
 
-def classify_text(text):
-    API_URL = "/https://router.huggingface.comodels/distilbert-base-uncased-finetuned-sst-2-english"
-    headers = {"Authorization": f"Bearer {HF_API_KEY}"}
-    payload = {"inputs": text}
-
-
-    response = requests.post(API_URL, headers=headers, json=payload)
-    return response.json()
 if __name__ == "__main__":
-    sample_text = "I like hugging face API!"
-    result = classify_text(sample_text)
-    print(result)
-
+    text= input("Enter text: ")
+    get_sentiment(text)
